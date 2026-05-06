@@ -1,0 +1,26 @@
+kind = "web"
+previewPath = "/"
+title = "Doodle Journal"
+version = "1.0.0"
+id = "artifacts/doodle-journal"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24109
+
+[services.development]
+run = "pnpm --filter @workspace/doodle-journal run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/doodle-journal", "run", "build" ]
+publicDir = "artifacts/doodle-journal/.next"
+serve = "static"
+
+[services.env]
+PORT = "24109"

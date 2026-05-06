@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Doodle Design System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Patrick+Hand&family=Reem+Kufi+Fun:wght@400;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --yellow: #F5C842;
+      --yellow-light: #FDF3C0;
+      --black: #1a1a1a;
+      --white: #ffffff;
+      --gray-100: #f9f9f7;
+      --gray-200: #efefeb;
+      --gray-400: #aaaaaa;
+      --gray-600: #666666;
+      --stroke: 2.5px;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 22px;
+      --shadow: 4px 4px 0 var(--black);
+      --shadow-lg: 7px 7px 0 var(--black);
+      --font-display: 'Caveat', cursive;
+      --font-body: 'Patrick Hand', cursive;
+      --sidebar-w: 230px;
+    }
+    [dir="rtl"] {
+      --shadow: -4px 4px 0 var(--black);
+      --shadow-lg: -7px 7px 0 var(--black);
+      --font-display: 'Reem Kufi Fun', sans-serif;
+      --font-body: 'Tajawal', sans-serif;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(180,180,180,.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(180,180,180,.15) 1px, transparent 1px);
+      background-size: 36px 36px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── LANG SWITCHER ── */
+    .lang-switcher {
+      position: fixed;
+      top: 16px; right: 16px;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      border: var(--stroke) solid var(--black);
+      border-radius: 999px;
+      overflow: hidden;
+      box-shadow: 3px 3px 0 var(--black);
+      background: var(--white);
+    }
+    [dir="rtl"] .lang-switcher { right: auto; left: 16px; box-shadow: -3px 3px 0 var(--black); }
+
+    .lang-btn {
+      padding: 7px 18px;
+      font-size: .88rem; font-weight: 700;
+      cursor: pointer; border: none;
+      background: transparent; color: var(--gray-400);
+      transition: background .15s, color .15s;
+      font-family: sans-serif;
+    }
+    .lang-btn.active { background: var(--yellow); color: var(--black); }
+    .lang-divider { width: 1px; height: 22px; background: rgba(0,0,0,.15); flex-shrink: 0; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--white);
+      border-right: var(--stroke) solid var(--black);
+      padding: 32px 20px;
+      z-index: 100;
+      display: flex; flex-direction: column; gap: 6px;
+      overflow-y: auto;
+    }
+    [dir="rtl"] .sidebar { left: auto; right: 0; border-right: none; border-left: var(--stroke) solid var(--black); }
+
+    .sidebar-logo {
+      font-family: var(--font-display);
+      font-size: 1.5rem; font-weight: 700;
+      margin-bottom: 6px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .sidebar-tagline {
+      font-size: .82rem; color: var(--gray-600);
+      margin-bottom: 22px; padding-bottom: 18px;
+      border-bottom: var(--stroke) dashed rgba(0,0,0,.15);
+    }
+    .nav-group-label {
+      font-family: var(--font-display);
+      font-size: .78rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em;
+      color: var(--gray-400); margin: 14px 0 4px 6px;
+    }
+    [dir="rtl"] .nav-group-label { margin: 14px 6px 4px 0; letter-spacing: 0; }
+
+    .nav-link {
+      display: block; padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      font-size: .95rem; color: var(--black);
+      text-decoration: none; transition: background .15s;
+    }
+    .nav-link:hover { background: var(--gray-100); }
+    .nav-link.active { background: var(--yellow); font-weight: 600; }
+
+    /* ── MAIN ── */
+    main {
+      margin-left: var(--sidebar-w);
+      padding: 60px 48px 100px;
+      max-width: 980px;
+      position: relative; z-index: 1;
+    }
+    [dir="rtl"] main { margin-left: 0; margin-right: var(--sidebar-w); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      display: flex; align-items: flex-end; gap: 28px;
+      margin-bottom: 56px; padding-bottom: 32px;
+      border-bottom: var(--stroke) dashed rgba(0,0,0,.2);
+    }
+    .page-header-text h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 700; line-height: 1.2;
+    }
+    .page-header-text p { margin-top: 10px; color: var(--gray-600); max-width: 460px; font-size: 1.05rem; }
+    .version-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--yellow); border: var(--stroke) solid var(--black);
+      border-radius: 999px; padding: 4px 14px;
+      font-family: var(--font-display); font-size: .95rem; font-weight: 600;
+      margin-top: 14px; box-shadow: 2px 2px 0 var(--black);
+    }
+    [dir="rtl"] .version-badge { box-shadow: -2px 2px 0 var(--black); }
+
+    /* ── SECTIONS ── */
+    .ds-section { margin-bottom: 72px; scroll-margin-top: 32px; }
+    .ds-section-title {
+      font-family: var(--font-display);
+      font-size: 1.9rem; font-weight: 700; margin-bottom: 6px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .ds-section-title::after {
+      content: ''; flex: 1; height: 2px;
+      background: var(--yellow); border-radius: 2px; margin-left: 4px;
+    }
+    [dir="rtl"] .ds-section-title::after { margin-left: 0; margin-right: 4px; }
+    .ds-section-desc { color: var(--gray-600); margin-bottom: 28px; font-size: .97rem; }
+
+    /* ── COLORS ── */
+    .token-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+    .token-card { border: var(--stroke) solid var(--black); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow); }
+    .token-swatch { height: 72px; }
+    .token-info { padding: 10px 12px; background: var(--white); }
+    .token-name { font-family: var(--font-display); font-size: 1rem; font-weight: 600; }
+    .token-value { font-size: .78rem; color: var(--gray-600); margin-top: 2px; font-family: 'Courier New', monospace; }
+
+    /* ── TYPOGRAPHY ── */
+    .type-table { width: 100%; border-collapse: collapse; }
+    .type-table tr { border-bottom: 1px dashed rgba(0,0,0,.12); }
+    .type-table td { padding: 14px 12px; vertical-align: middle; }
+    .type-label { font-size: .82rem; color: var(--gray-600); white-space: nowrap; width: 130px; }
+    .type-meta { font-size: .78rem; color: var(--gray-400); text-align: right; }
+    [dir="rtl"] .type-meta { text-align: left; }
+    .type-sample-display { font-family: var(--font-display); font-size: 2.4rem; font-weight: 700; }
+    .type-sample-h1 { font-family: var(--font-display); font-size: 1.9rem; font-weight: 700; }
+    .type-sample-h2 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 600; }
+    .type-sample-body { font-family: var(--font-body); font-size: 1rem; }
+    .type-sample-small { font-family: var(--font-body); font-size: .82rem; color: var(--gray-600); }
+    .type-sample-label { font-family: var(--font-display); font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--gray-400); }
+
+    /* ── SPACING ── */
+    .spacing-row { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+    .spacing-bar { background: var(--yellow); border: var(--stroke) solid var(--black); border-radius: 4px; height: 20px; }
+    .spacing-meta { font-size: .82rem; color: var(--gray-600); white-space: nowrap; }
+    .spacing-label { font-family: var(--font-display); font-size: .95rem; font-weight: 600; width: 60px; flex-shrink: 0; }
+
+    /* ── RADIUS ── */
+    .radius-grid { display: flex; gap: 20px; flex-wrap: wrap; }
+    .radius-box { width: 80px; height: 80px; border: var(--stroke) solid var(--black); background: var(--yellow-light); }
+    .radius-label { font-size: .8rem; color: var(--gray-600); margin-top: 6px; text-align: center; }
+
+    /* ── SHADOWS ── */
+    .shadow-demo { display: flex; gap: 28px; flex-wrap: wrap; }
+    .shadow-box {
+      width: 100px; height: 70px; background: var(--white);
+      border: var(--stroke) solid var(--black); border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: .9rem; font-weight: 600;
+    }
+
+    /* ── BUTTONS ── */
+    .component-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; margin-bottom: 24px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 22px; border: var(--stroke) solid var(--black);
+      border-radius: 999px; font-family: var(--font-display);
+      font-size: 1.1rem; font-weight: 600; cursor: pointer;
+      box-shadow: var(--shadow); transition: transform .15s, box-shadow .15s;
+      background: var(--white);
+    }
+    .btn:hover { transform: translate(-2px,-2px); box-shadow: var(--shadow-lg); }
+    [dir="rtl"] .btn:hover { transform: translate(2px,-2px); }
+    .btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--black); }
+    [dir="rtl"] .btn:active { transform: translate(-2px,2px); }
+    .btn-primary { background: var(--yellow); }
+    .btn-ghost { box-shadow: none; border-style: dashed; }
+    .btn-ghost:hover { box-shadow: none; background: var(--gray-100); transform: none; }
+
+    /* ── CARDS ── */
+    .demo-card { background: var(--white); border: var(--stroke) solid var(--black); border-radius: var(--radius-lg); padding: 22px 24px; box-shadow: var(--shadow); width: 200px; }
+    .demo-card-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .demo-card-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; }
+    .demo-card-desc { font-size: .88rem; color: var(--gray-600); margin-top: 4px; }
+
+    /* ── BADGES ── */
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border: var(--stroke) solid var(--black); border-radius: 999px; font-family: var(--font-display); font-size: .9rem; font-weight: 600; }
+    .badge-yellow { background: var(--yellow); }
+    .badge-dot::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--black); border: 2px solid var(--yellow); }
+
+    /* ── INPUTS ── */
+    .demo-input {
+      border: var(--stroke) solid var(--black); border-radius: var(--radius-sm);
+      padding: 10px 16px; font-family: var(--font-body); font-size: 1rem;
+      outline: none; background: var(--white); width: 260px;
+      box-shadow: var(--shadow); transition: box-shadow .15s; text-align: inherit;
+    }
+    .demo-input:focus { box-shadow: var(--shadow-lg); }
+
+    /* ── POST LIST ── */
+    .demo-post {
+      display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px;
+      border: var(--stroke) solid rgba(0,0,0,.12); border-radius: var(--radius-md);
+      transition: background .15s, border-color .15s; cursor: pointer; max-width: 400px;
+    }
+    .demo-post:hover { background: var(--gray-100); border-color: var(--black); }
+    .demo-post-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--yellow); border: 2px solid var(--black); flex-shrink: 0; margin-top: 4px; }
+    .demo-post-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; }
+    .demo-post-meta { font-size: .8rem; color: var(--gray-400); margin-top: 2px; }
+
+    /* ── ANIMATIONS ── */
+    .anim-grid { display: flex; gap: 32px; flex-wrap: wrap; }
+    .anim-box { border: var(--stroke) solid var(--black); border-radius: var(--radius-md); padding: 24px; text-align: center; width: 160px; box-shadow: var(--shadow); }
+    .anim-label { font-family: var(--font-display); font-size: .9rem; font-weight: 600; margin-top: 12px; }
+    .anim-sub { font-size: .76rem; color: var(--gray-600); margin-top: 2px; }
+    .anim-figure { display: inline-block; }
+    .anim-wobble { animation: wobble 3s ease-in-out infinite; transform-origin: bottom center; }
+    .anim-wave   { animation: wave 2.5s ease-in-out infinite; transform-origin: bottom center; }
+    .anim-float  { animation: float 3s ease-in-out infinite; }
+    .anim-pop    { animation: pop 1.5s ease-in-out infinite; }
+
+    @keyframes wobble { 0%,100%{transform:rotate(0deg)}25%{transform:rotate(2deg)}75%{transform:rotate(-2deg)} }
+    @keyframes wave   { 0%,100%{transform:rotate(0deg)}30%{transform:rotate(14deg)}60%{transform:rotate(-8deg)} }
+    @keyframes float  { 0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)} }
+    @keyframes pop    { 0%,100%{transform:scale(1)}50%{transform:scale(1.12)} }
+
+    /* ── CODE BLOCK ── */
+    .code-block {
+      background: var(--gray-100); border: var(--stroke) solid rgba(0,0,0,.15);
+      border-radius: var(--radius-md); padding: 20px 22px;
+      font-family: 'Courier New', monospace; font-size: .85rem; line-height: 1.7;
+      overflow-x: auto; direction: ltr; text-align: left;
+    }
+    .token-prop { color: #c08000; }
+    .token-val  { color: #2a7a2a; }
+    .token-comment { color: var(--gray-400); font-style: italic; }
+
+    /* ── ICON GRID ── */
+    .icon-grid { display: flex; flex-wrap: wrap; gap: 12px; }
+    .icon-pill { display: inline-flex; align-items: center; gap: 8px; border: var(--stroke) solid rgba(0,0,0,.15); border-radius: 999px; padding: 6px 14px; font-size: .95rem; background: var(--gray-100); }
+
+    /* ── DO/DON'T ── */
+    .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .do-box, .dont-box { border-radius: var(--radius-md); padding: 20px; border: var(--stroke) solid var(--black); box-shadow: var(--shadow); }
+    .do-box   { border-top: 5px solid #4caf50; }
+    .dont-box { border-top: 5px solid #e53935; }
+    .do-dont-label { font-family: var(--font-display); font-size: .85rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 10px; }
+    [dir="rtl"] .do-dont-label { letter-spacing: 0; }
+    .do-box .do-dont-label   { color: #4caf50; }
+    .dont-box .do-dont-label { color: #e53935; }
+    .do-dont p { font-size: .92rem; color: var(--gray-600); line-height: 1.5; }
+
+    /* ── PRINCIPLES ── */
+    .principle-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); gap: 20px; }
+    .principle-card { border: var(--stroke) solid var(--black); border-radius: var(--radius-lg); padding: 24px 22px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+    .principle-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: var(--yellow); }
+    .principle-card-num { font-family: var(--font-display); font-size: 2.4rem; font-weight: 700; opacity: .08; position: absolute; right: 16px; bottom: 8px; }
+    [dir="rtl"] .principle-card-num { right: auto; left: 16px; }
+    .principle-card-title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+    .principle-card-desc { font-size: .9rem; color: var(--gray-600); line-height: 1.5; }
+
+    /* ── PATTERN LABEL ── */
+    .pattern-label { position: absolute; bottom: 8px; right: 10px; font-size: .75rem; color: var(--gray-400); }
+    [dir="rtl"] .pattern-label { right: auto; left: 10px; }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 999px; }
+
+    @media (max-width: 780px) {
+      .sidebar { display: none; }
+      main { margin-left: 0 !important; margin-right: 0 !important; padding: 32px 20px 80px; }
+      .do-dont { grid-template-columns: 1fr; }
+      .lang-switcher { top: 12px; right: 12px; }
+      [dir="rtl"] .lang-switcher { left: 12px; right: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── LANG SWITCHER ── -->
+  <div class="lang-switcher">
+    <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+    <div class="lang-divider"></div>
+    <button class="lang-btn" id="btn-ar" onclick="setLang('ar')">عربي</button>
+  </div>
+
+  <!-- ── SIDEBAR ── -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="28" height="40" viewBox="0 0 110 160" fill="none">
+        <ellipse cx="55" cy="38" rx="25" ry="28" fill="#F5C842" stroke="#1a1a1a" stroke-width="3.5"/>
+        <circle cx="46" cy="35" r="2.5" fill="#1a1a1a"/><circle cx="64" cy="35" r="2.5" fill="#1a1a1a"/>
+        <path d="M46 47 Q55 56 64 47" stroke="#1a1a1a" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+        <line x1="55" y1="66" x2="55" y2="118" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="55" y1="82" x2="28" y2="104" stroke="#1a1a1a" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="55" y1="82" x2="82" y2="104" stroke="#1a1a1a" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="55" y1="118" x2="36" y2="152" stroke="#1a1a1a" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="55" y1="118" x2="74" y2="152" stroke="#1a1a1a" stroke-width="3.2" stroke-linecap="round"/>
+      </svg>
+      <span data-i18n="logoTitle">Doodle DS</span>
+    </div>
+    <div class="sidebar-tagline" data-i18n="logoTagline">v1.0 · a hand-drawn design system</div>
+
+    <span class="nav-group-label" data-i18n="navFoundations">Foundations</span>
+    <a class="nav-link" href="#principles" data-i18n="navPrinciples">Principles</a>
+    <a class="nav-link" href="#colors"     data-i18n="navColors">Colors</a>
+    <a class="nav-link" href="#typography" data-i18n="navTypography">Typography</a>
+    <a class="nav-link" href="#spacing"    data-i18n="navSpacing">Spacing</a>
+    <a class="nav-link" href="#radii"      data-i18n="navRadius">Border Radius</a>
+    <a class="nav-link" href="#shadows"    data-i18n="navShadows">Shadows</a>
+
+    <span class="nav-group-label" data-i18n="navComponents">Components</span>
+    <a class="nav-link" href="#buttons"    data-i18n="navButtons">Buttons</a>
+    <a class="nav-link" href="#cards"      data-i18n="navCards">Cards</a>
+    <a class="nav-link" href="#badges"     data-i18n="navBadges">Badges</a>
+    <a class="nav-link" href="#inputs"     data-i18n="navInputs">Inputs</a>
+    <a class="nav-link" href="#lists"      data-i18n="navLists">List Items</a>
+
+    <span class="nav-group-label" data-i18n="navMotion">Motion</span>
+    <a class="nav-link" href="#animations" data-i18n="navAnimations">Animations</a>
+    <a class="nav-link" href="#patterns"   data-i18n="navPatterns">Patterns</a>
+
+    <span class="nav-group-label" data-i18n="navUsage">Usage</span>
+    <a class="nav-link" href="#tokens"     data-i18n="navTokens">CSS Tokens</a>
+    <a class="nav-link" href="#dodont"     data-i18n="navDoDont">Do &amp; Don't</a>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <main>
+
+    <header class="page-header">
+      <div class="page-header-text">
+        <h1 data-i18n="heroTitle">Doodle<br>Design System</h1>
+        <p data-i18n="heroSubtitle">A playful, hand-drawn UI language built around warmth, imperfection, and the joy of a notebook sketch brought to life.</p>
+        <div class="version-badge" data-i18n="heroBadge">✏️ Version 1.0</div>
+      </div>
+      <svg width="90" height="130" viewBox="0 0 110 160" fill="none" style="flex-shrink:0;animation:wobble 4s ease-in-out infinite;transform-origin:bottom center">
+        <ellipse cx="55" cy="38" rx="25" ry="28" fill="#F5C842" stroke="#1a1a1a" stroke-width="3.5"/>
+        <circle cx="46" cy="35" r="2.5" fill="#1a1a1a"/><circle cx="64" cy="35" r="2.5" fill="#1a1a1a"/>
+        <path d="M46 47 Q55 56 64 47" stroke="#1a1a1a" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+        <line x1="55" y1="66" x2="55" y2="118" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="55" y1="82" x2="28" y2="104" stroke="#1a1a1a" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="55" y1="82" x2="82" y2="104" stroke="#1a1a1a" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="55" y1="118" x2="36" y2="152" stroke="#1a1a1a" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="55" y1="118" x2="74" y2="152" stroke="#1a1a1a" stroke-width="3.2" stroke-linecap="round"/>
+      </svg>
+    </header>
+
+    <!-- PRINCIPLES -->
+    <section class="ds-section" id="principles">
+      <h2 class="ds-section-title" data-i18n="secPrinciples">Principles</h2>
+      <p class="ds-section-desc" data-i18n="secPrinciplesDesc">The four ideas that guide every design decision in this system.</p>
+      <div class="principle-grid">
+        <div class="principle-card"><div class="principle-card-title" data-i18n="p1Title">✏️ Imperfect by design</div><div class="principle-card-desc" data-i18n="p1Desc">Hand-drawn strokes, wobbly edges, and organic shapes are features, not bugs. Perfection is cold. Doodles are warm.</div><div class="principle-card-num">01</div></div>
+        <div class="principle-card"><div class="principle-card-title" data-i18n="p2Title">💬 Conversational tone</div><div class="principle-card-desc" data-i18n="p2Desc">Copy sounds like a person, not a product. Lowercase preferred. Self-deprecating humor welcome. No corporate speak.</div><div class="principle-card-num">02</div></div>
+        <div class="principle-card"><div class="principle-card-title" data-i18n="p3Title">🌟 Yellow as energy</div><div class="principle-card-desc" data-i18n="p3Desc">The single accent color carries all emphasis. It's the highlighter on the notebook page. Use it sparingly and deliberately.</div><div class="principle-card-num">03</div></div>
+        <div class="principle-card"><div class="principle-card-title" data-i18n="p4Title">🌀 Motion with personality</div><div class="principle-card-desc" data-i18n="p4Desc">Animations are gentle and playful — a wobble, a wave, a float. Never snappy or corporate. The UI breathes.</div><div class="principle-card-num">04</div></div>
+      </div>
+    </section>
+
+    <!-- COLORS -->
+    <section class="ds-section" id="colors">
+      <h2 class="ds-section-title" data-i18n="secColors">Colors</h2>
+      <p class="ds-section-desc" data-i18n="secColorsDesc">A deliberately minimal palette. One hero accent, neutral grays, and pure black-and-white structure.</p>
+      <div class="token-grid">
+        <div class="token-card"><div class="token-swatch" style="background:#F5C842"></div><div class="token-info"><div class="token-name" data-i18n="cYellow">Yellow</div><div class="token-value">--yellow · #F5C842</div></div></div>
+        <div class="token-card"><div class="token-swatch" style="background:#FDF3C0;border-bottom:1px solid #eee"></div><div class="token-info"><div class="token-name" data-i18n="cYellowL">Yellow Light</div><div class="token-value">--yellow-light · #FDF3C0</div></div></div>
+        <div class="token-card"><div class="token-swatch" style="background:#1a1a1a"></div><div class="token-info"><div class="token-name" data-i18n="cBlack">Black</div><div class="token-value">--black · #1A1A1A</div></div></div>
+        <div class="token-card"><div class="token-swatch" style="background:#fff;border-bottom:1px solid #eee"></div><div class="token-info"><div class="token-name" data-i18n="cWhite">White</div><div class="token-value">--white · #FFFFFF</div></div></div>
+        <div class="token-card"><div class="token-swatch" style="background:#f9f9f7;border-bottom:1px solid #eee"></div><div class="token-info"><div class="token-name" data-i18n="cG100">Gray 100</div><div class="token-value">--gray-100</div></div></div>
+        <div class="token-card"><div class="token-swatch" style="background:#efefeb;border-bottom:1px solid #eee"></div><div class="token-info"><div class="token-name" data-i18n="cG200">Gray 200</div><div class="token-value">--gray-200</div></div></div>
+        <div class="token-card"><div class="token-swatch" style="background:#aaaaaa"></div><div class="token-info"><div class="token-name" data-i18n="cG400">Gray 400</div><div class="token-value">--gray-400</div></div></div>
+        <div class="token-card"><div class="token-swatch" style="background:#666666"></div><div class="token-info"><div class="token-name" data-i18n="cG600">Gray 600</div><div class="token-value">--gray-600</div></div></div>
+      </div>
+    </section>
+
+    <!-- TYPOGRAPHY -->
+    <section class="ds-section" id="typography">
+      <h2 class="ds-section-title" data-i18n="secTypography">Typography</h2>
+      <p class="ds-section-desc" data-i18n="secTypographyDesc">Two Google Fonts in harmony: Caveat + Patrick Hand (LTR). Arabic: Reem Kufi Fun + Tajawal (RTL).</p>
+      <table class="type-table"><tbody>
+        <tr><td class="type-label" data-i18n="tDisplay">Display</td><td><span class="type-sample-display" data-i18n="tsDisplay">hello world</span></td><td class="type-meta" data-i18n="tmDisplay">700 · 2.4rem</td></tr>
+        <tr><td class="type-label" data-i18n="tH1">Heading 1</td><td><span class="type-sample-h1" data-i18n="tsH1">sorry if i'm interrupting</span></td><td class="type-meta" data-i18n="tmH1">700 · 1.9rem</td></tr>
+        <tr><td class="type-label" data-i18n="tH2">Heading 2</td><td><span class="type-sample-h2" data-i18n="tsH2">recent posts</span></td><td class="type-meta" data-i18n="tmH2">600 · 1.4rem</td></tr>
+        <tr><td class="type-label" data-i18n="tBody">Body</td><td><span class="type-sample-body" data-i18n="tsBody">thoughts i couldn't keep to myself</span></td><td class="type-meta" data-i18n="tmBody">400 · 1rem</td></tr>
+        <tr><td class="type-label" data-i18n="tSmall">Small</td><td><span class="type-sample-small" data-i18n="tsSmall">April 18 · 4 min read</span></td><td class="type-meta" data-i18n="tmSmall">400 · 0.82rem</td></tr>
+        <tr><td class="type-label" data-i18n="tLabel">Nav Label</td><td><span class="type-sample-label" data-i18n="tsLabel">Foundations</span></td><td class="type-meta" data-i18n="tmLabel">700 · uppercase</td></tr>
+      </tbody></table>
+    </section>
+
+    <!-- SPACING -->
+    <section class="ds-section" id="spacing">
+      <h2 class="ds-section-title" data-i18n="secSpacing">Spacing</h2>
+      <p class="ds-section-desc" data-i18n="secSpacingDesc">A base-4 scale. Consistent rhythm creates visual harmony throughout the layout.</p>
+      <div>
+        <div class="spacing-row"><div class="spacing-label">4px</div><div class="spacing-bar" style="width:4px"></div><div class="spacing-meta" data-i18n="sp1">micro gap</div></div>
+        <div class="spacing-row"><div class="spacing-label">8px</div><div class="spacing-bar" style="width:8px"></div><div class="spacing-meta" data-i18n="sp2">tight gap</div></div>
+        <div class="spacing-row"><div class="spacing-label">16px</div><div class="spacing-bar" style="width:16px"></div><div class="spacing-meta" data-i18n="sp3">default gap</div></div>
+        <div class="spacing-row"><div class="spacing-label">24px</div><div class="spacing-bar" style="width:24px"></div><div class="spacing-meta" data-i18n="sp4">card padding</div></div>
+        <div class="spacing-row"><div class="spacing-label">48px</div><div class="spacing-bar" style="width:48px"></div><div class="spacing-meta" data-i18n="sp5">layout padding</div></div>
+        <div class="spacing-row"><div class="spacing-label">72px</div><div class="spacing-bar" style="width:72px"></div><div class="spacing-meta" data-i18n="sp6">section margin</div></div>
+      </div>
+    </section>
+
+    <!-- BORDER RADIUS -->
+    <section class="ds-section" id="radii">
+      <h2 class="ds-section-title" data-i18n="secRadius">Border Radius</h2>
+      <p class="ds-section-desc" data-i18n="secRadiusDesc">Soft, rounded corners everywhere. Sharp edges feel too cold for this system.</p>
+      <div class="radius-grid">
+        <div style="text-align:center"><div class="radius-box" style="border-radius:4px"></div><div class="radius-label">4px · xs</div></div>
+        <div style="text-align:center"><div class="radius-box" style="border-radius:10px"></div><div class="radius-label">10px · sm</div></div>
+        <div style="text-align:center"><div class="radius-box" style="border-radius:16px"></div><div class="radius-label">16px · md</div></div>
+        <div style="text-align:center"><div class="radius-box" style="border-radius:22px"></div><div class="radius-label">22px · lg</div></div>
+        <div style="text-align:center"><div class="radius-box" style="border-radius:999px;width:80px;height:40px;margin-top:20px"></div><div class="radius-label">999px · pill</div></div>
+      </div>
+    </section>
+
+    <!-- SHADOWS -->
+    <section class="ds-section" id="shadows">
+      <h2 class="ds-section-title" data-i18n="secShadows">Shadows</h2>
+      <p class="ds-section-desc" data-i18n="secShadowsDesc">Flat offset shadows in pure black. No blurs. In RTL, the X-axis flips so the shadow always falls inward.</p>
+      <div class="shadow-demo">
+        <div><div class="shadow-box" style="box-shadow:none" data-i18n="shNone">None</div><div class="radius-label" style="text-align:center;margin-top:10px" data-i18n="shNoneL">no shadow</div></div>
+        <div><div class="shadow-box" style="box-shadow:2px 2px 0 #1a1a1a" data-i18n="shSm">Small</div><div class="radius-label" style="text-align:center;margin-top:10px">2px</div></div>
+        <div><div class="shadow-box" style="box-shadow:var(--shadow)" data-i18n="shDef">Default</div><div class="radius-label" style="text-align:center;margin-top:10px">4px</div></div>
+        <div><div class="shadow-box" style="box-shadow:var(--shadow-lg)" data-i18n="shLg">Large</div><div class="radius-label" style="text-align:center;margin-top:10px">7px</div></div>
+      </div>
+    </section>
+
+    <!-- BUTTONS -->
+    <section class="ds-section" id="buttons">
+      <h2 class="ds-section-title" data-i18n="secButtons">Buttons</h2>
+      <p class="ds-section-desc" data-i18n="secButtonsDesc">Pill-shaped with flat offset shadows. Hover lifts the button, active presses it down. Direction-aware in RTL.</p>
+      <div class="component-row">
+        <button class="btn btn-primary" data-i18n="btnP">✏️ primary</button>
+        <button class="btn" data-i18n="btnD">default</button>
+        <button class="btn btn-ghost" data-i18n="btnG">ghost</button>
+        <button class="btn btn-primary" style="opacity:.45;cursor:not-allowed" data-i18n="btnDis">disabled</button>
+      </div>
+      <div class="code-block">
+<span class="token-comment">/* LTR hover — lifts to top-left */</span>
+.btn:hover { <span class="token-prop">transform</span>: <span class="token-val">translate(-2px, -2px)</span>; }
+
+<span class="token-comment">/* RTL mirror — lifts to top-right */</span>
+[dir="rtl"] .btn:hover { <span class="token-prop">transform</span>: <span class="token-val">translate(2px, -2px)</span>; }
+
+<span class="token-comment">/* Shadow flips automatically via CSS variable */</span>
+[dir="rtl"] { <span class="token-prop">--shadow</span>: <span class="token-val">-4px 4px 0 var(--black)</span>; }</div>
+    </section>
+
+    <!-- CARDS -->
+    <section class="ds-section" id="cards">
+      <h2 class="ds-section-title" data-i18n="secCards">Cards</h2>
+      <p class="ds-section-desc" data-i18n="secCardsDesc">The primary content container. Rounded, outlined, flat shadow. Yellow variant for featured content.</p>
+      <div class="component-row">
+        <div class="demo-card"><div class="demo-card-icon">🎨</div><div class="demo-card-title" data-i18n="cdTitle1">portfolio</div><div class="demo-card-desc" data-i18n="cdDesc1">things i made (some proud of)</div></div>
+        <div class="demo-card" style="background:var(--yellow)"><div class="demo-card-icon">✏️</div><div class="demo-card-title" data-i18n="cdTitle2">featured</div><div class="demo-card-desc" data-i18n="cdDesc2">yellow bg for highlights</div></div>
+        <div class="demo-card" style="background:var(--gray-100);box-shadow:none;border-style:dashed"><div class="demo-card-icon">➕</div><div class="demo-card-title" data-i18n="cdTitle3">ghost card</div><div class="demo-card-desc" data-i18n="cdDesc3">dashed, no shadow</div></div>
+      </div>
+    </section>
+
+    <!-- BADGES -->
+    <section class="ds-section" id="badges">
+      <h2 class="ds-section-title" data-i18n="secBadges">Badges</h2>
+      <p class="ds-section-desc" data-i18n="secBadgesDesc">Pill-shaped labels for statuses, tags, and metadata. Always bordered.</p>
+      <div class="component-row" style="flex-wrap:wrap;gap:12px">
+        <span class="badge badge-yellow" data-i18n="b1">✏️ Version 1.0</span>
+        <span class="badge" style="background:transparent" data-i18n="b2">open source</span>
+        <span class="badge badge-dot" data-i18n="b3">active</span>
+        <span class="badge" style="background:var(--gray-100)" data-i18n="b4">draft</span>
+        <span class="badge" style="background:#e8f5e9;border-color:#4caf50;color:#2e7d32" data-i18n="b5">published ✓</span>
+        <span class="badge" style="background:#fff3e0;border-color:#ff9800;color:#e65100" data-i18n="b6">⚡ new</span>
+      </div>
+    </section>
+
+    <!-- INPUTS -->
+    <section class="ds-section" id="inputs">
+      <h2 class="ds-section-title" data-i18n="secInputs">Inputs</h2>
+      <p class="ds-section-desc" data-i18n="secInputsDesc">Clean bordered inputs with offset shadow. Focus amplifies depth. Text aligns with reading direction.</p>
+      <div class="component-row" style="flex-direction:column;align-items:flex-start">
+        <input class="demo-input" type="text" data-i18n-ph="inPH" placeholder="type something here…"/>
+        <input class="demo-input" type="text" data-i18n-val="inFoc" value="i'm focused" style="box-shadow:var(--shadow-lg)"/>
+        <input class="demo-input" type="text" data-i18n-ph="inDis" placeholder="disabled input" disabled style="opacity:.45;cursor:not-allowed;box-shadow:none"/>
+      </div>
+    </section>
+
+    <!-- LIST ITEMS -->
+    <section class="ds-section" id="lists">
+      <h2 class="ds-section-title" data-i18n="secLists">List Items</h2>
+      <p class="ds-section-desc" data-i18n="secListsDesc">Used for blog posts, notifications, and feeds. The yellow dot is the visual anchor.</p>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="demo-post"><div class="demo-post-dot"></div><div><div class="demo-post-title" data-i18n="li1t">i tried to learn something new every week</div><div class="demo-post-meta" data-i18n="li1m">April 18 · 4 min read</div></div></div>
+        <div class="demo-post" style="background:var(--gray-100);border-color:var(--black)"><div class="demo-post-dot"></div><div><div class="demo-post-title" data-i18n="li2t">this is the hover state</div><div class="demo-post-meta" data-i18n="li2m">April 9 · 2 min read</div></div></div>
+      </div>
+    </section>
+
+    <!-- ANIMATIONS -->
+    <section class="ds-section" id="animations">
+      <h2 class="ds-section-title" data-i18n="secAnim">Animations</h2>
+      <p class="ds-section-desc" data-i18n="secAnimDesc">All animations are gentle, looping, and personality-driven. Never abrupt, never mechanical.</p>
+      <div class="anim-grid">
+        <div class="anim-box">
+          <div class="anim-figure anim-wobble">
+            <svg width="44" height="64" viewBox="0 0 110 160" fill="none"><ellipse cx="55" cy="38" rx="25" ry="28" fill="#F5C842" stroke="#1a1a1a" stroke-width="4"/><circle cx="46" cy="35" r="2.5" fill="#1a1a1a"/><circle cx="64" cy="35" r="2.5" fill="#1a1a1a"/><path d="M46 47 Q55 56 64 47" stroke="#1a1a1a" stroke-width="3" stroke-linecap="round" fill="none"/><line x1="55" y1="66" x2="55" y2="118" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/><line x1="55" y1="82" x2="28" y2="104" stroke="#1a1a1a" stroke-width="3.2" stroke-linecap="round"/><line x1="55" y1="82" x2="82" y2="104" stroke="#1a1a1a" stroke-width="3.2" stroke-linecap="round"/><line x1="55" y1="118" x2="36" y2="152" stroke="#1a1a1a" stroke-width="3.2" stroke-linecap="round"/><line x1="55" y1="118" x2="74" y2="152" stroke="#1a1a1a" stroke-width="3.2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="anim-label" data-i18n="anW">wobble</div><div class="anim-sub" data-i18n="anWs">idle breathing</div>
+        </div>
+        <div class="anim-box">
+          <div class="anim-figure anim-wave">
+            <svg width="44" height="64" viewBox="0 0 110 160" fill="none"><ellipse cx="55" cy="38" rx="25" ry="28" fill="#F5C842" stroke="#1a1a1a" stroke-width="4"/><circle cx="46" cy="35" r="2.5" fill="#1a1a1a"/><circle cx="64" cy="35" r="2.5" fill="#1a1a1a"/><path d="M46 47 Q55 56 64 47" stroke="#1a1a1a" stroke-width="3" stroke-linecap="round" fill="none"/><line x1="55" y1="66" x2="55" y2="118" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/><line x1="55" y1="82" x2="28" y2="104" stroke="#1a1a1a" stroke-width="3.2" stroke-linecap="round"/><line x1="55" y1="82" x2="82" y2="104" stroke="#1a1a1a" stroke-width="3.2" stroke-linecap="round"/><line x1="55" y1="118" x2="36" y2="152" stroke="#1a1a1a" stroke-width="3.2" stroke-linecap="round"/><line x1="55" y1="118" x2="74" y2="152" stroke="#1a1a1a" stroke-width="3.2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="anim-label" data-i18n="anWv">wave</div><div class="anim-sub" data-i18n="anWvs">footer farewell</div>
+        </div>
+        <div class="anim-box">
+          <div class="anim-figure anim-float"><div style="width:44px;height:44px;background:var(--yellow);border:2.5px solid var(--black);border-radius:50%;box-shadow:var(--shadow)"></div></div>
+          <div class="anim-label" data-i18n="anF">float</div><div class="anim-sub" data-i18n="anFs">speech bubbles</div>
+        </div>
+        <div class="anim-box">
+          <div class="anim-figure anim-pop"><div style="width:44px;height:44px;background:var(--yellow);border:2.5px solid var(--black);border-radius:12px;box-shadow:var(--shadow)"></div></div>
+          <div class="anim-label" data-i18n="anP">pop</div><div class="anim-sub" data-i18n="anPs">attention pulse</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PATTERNS -->
+    <section class="ds-section" id="patterns">
+      <h2 class="ds-section-title" data-i18n="secPat">Background Patterns</h2>
+      <p class="ds-section-desc" data-i18n="secPatDesc">The grid paper texture grounds the UI in a notebook metaphor. Applied as a fixed full-viewport layer.</p>
+      <div style="display:flex;gap:20px;flex-wrap:wrap">
+        <div style="width:200px;height:120px;border:var(--stroke) solid var(--black);border-radius:var(--radius-md);box-shadow:var(--shadow);background-image:linear-gradient(rgba(180,180,180,.25) 1px,transparent 1px),linear-gradient(90deg,rgba(180,180,180,.25) 1px,transparent 1px);background-size:24px 24px;position:relative;overflow:hidden"><span class="pattern-label">grid · 24px</span></div>
+        <div style="width:200px;height:120px;border:var(--stroke) solid var(--black);border-radius:var(--radius-md);box-shadow:var(--shadow);background-image:linear-gradient(rgba(180,180,180,.2) 1px,transparent 1px);background-size:100% 28px;position:relative;overflow:hidden"><span class="pattern-label">lines · 28px</span></div>
+        <div style="width:200px;height:120px;border:var(--stroke) solid var(--black);border-radius:var(--radius-md);box-shadow:var(--shadow);background:#fff;position:relative;overflow:hidden"><span class="pattern-label">plain · white</span></div>
+      </div>
+    </section>
+
+    <!-- CSS TOKENS -->
+    <section class="ds-section" id="tokens">
+      <h2 class="ds-section-title" data-i18n="secTok">CSS Tokens</h2>
+      <p class="ds-section-desc" data-i18n="secTokDesc">Copy this into your :root. The RTL block auto-swaps fonts and shadow direction.</p>
+      <div class="code-block">:root {
+  <span class="token-prop">--yellow</span>:        <span class="token-val">#F5C842</span>;
+  <span class="token-prop">--yellow-light</span>:  <span class="token-val">#FDF3C0</span>;
+  <span class="token-prop">--black</span>:         <span class="token-val">#1a1a1a</span>;
+  <span class="token-prop">--font-display</span>:  <span class="token-val">'Caveat', cursive</span>;
+  <span class="token-prop">--font-body</span>:     <span class="token-val">'Patrick Hand', cursive</span>;
+  <span class="token-prop">--shadow</span>:        <span class="token-val">4px 4px 0 var(--black)</span>;
+  <span class="token-prop">--shadow-lg</span>:     <span class="token-val">7px 7px 0 var(--black)</span>;
+}
+<span class="token-comment">/* Arabic RTL — swap fonts + mirror shadows */</span>
+[dir="rtl"] {
+  <span class="token-prop">--font-display</span>:  <span class="token-val">'Reem Kufi Fun', sans-serif</span>;
+  <span class="token-prop">--font-body</span>:     <span class="token-val">'Tajawal', sans-serif</span>;
+  <span class="token-prop">--shadow</span>:        <span class="token-val">-4px 4px 0 var(--black)</span>;
+  <span class="token-prop">--shadow-lg</span>:     <span class="token-val">-7px 7px 0 var(--black)</span>;
+}</div>
+    </section>
+
+    <!-- DO & DON'T -->
+    <section class="ds-section" id="dodont">
+      <h2 class="ds-section-title" data-i18n="secDD">Do &amp; Don't</h2>
+      <p class="ds-section-desc" data-i18n="secDDDesc">Quick rules to keep the system coherent when extending it.</p>
+      <div class="do-dont">
+        <div class="do-box"><div class="do-dont-label" data-i18n="doL">✓ Do</div><p data-i18n="do1">Use yellow sparingly — one accent per section max, to preserve its emphasis power.</p></div>
+        <div class="dont-box"><div class="do-dont-label" data-i18n="dontL">✗ Don't</div><p data-i18n="dn1">Don't fill entire backgrounds with yellow. It dilutes the accent and feels chaotic.</p></div>
+        <div class="do-box"><div class="do-dont-label" data-i18n="doL">✓ Do</div><p data-i18n="do2">Write copy conversationally. Match the casual energy of the visual system.</p></div>
+        <div class="dont-box"><div class="do-dont-label" data-i18n="dontL">✗ Don't</div><p data-i18n="dn2">Don't use formal, corporate language. "Click to proceed" — no. "let's go →" — yes.</p></div>
+        <div class="do-box"><div class="do-dont-label" data-i18n="doL">✓ Do</div><p data-i18n="do3">Apply the offset shadow to interactive elements. It signals depth and clickability.</p></div>
+        <div class="dont-box"><div class="do-dont-label" data-i18n="dontL">✗ Don't</div><p data-i18n="dn3">Don't use blurred or opacity-based shadows. They conflict with the flat aesthetic.</p></div>
+        <div class="do-box"><div class="do-dont-label" data-i18n="doL">✓ Do</div><p data-i18n="do4">Keep animations slow and organic — 2–4s with ease-in-out timing.</p></div>
+        <div class="dont-box"><div class="do-dont-label" data-i18n="dontL">✗ Don't</div><p data-i18n="dn4">Don't use fast animations under 200ms. They feel robotic, not doodle-like.</p></div>
+      </div>
+    </section>
+
+    <!-- ICONS -->
+    <section class="ds-section">
+      <h2 class="ds-section-title" data-i18n="secIcons">Emoji Icons</h2>
+      <p class="ds-section-desc" data-i18n="secIconsDesc">No icon library needed — emoji reinforce the handmade feel across both languages.</p>
+      <div class="icon-grid">
+        <span class="icon-pill">✏️ <span data-i18n="ic1">edit</span></span>
+        <span class="icon-pill">🎨 <span data-i18n="ic2">design</span></span>
+        <span class="icon-pill">📬 <span data-i18n="ic3">contact</span></span>
+        <span class="icon-pill">🗂️ <span data-i18n="ic4">archive</span></span>
+        <span class="icon-pill">⭐ <span data-i18n="ic5">featured</span></span>
+        <span class="icon-pill">💬 <span data-i18n="ic6">comment</span></span>
+        <span class="icon-pill">🔗 <span data-i18n="ic7">link</span></span>
+        <span class="icon-pill">☕ <span data-i18n="ic8">about</span></span>
+        <span class="icon-pill">📝 <span data-i18n="ic9">notes</span></span>
+        <span class="icon-pill">🌟 <span data-i18n="ic10">highlight</span></span>
+        <span class="icon-pill">➕ <span data-i18n="ic11">add</span></span>
+        <span class="icon-pill">✓ <span data-i18n="ic12">done</span></span>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+  const T = {
+    en: {
+      logoTitle:"Doodle DS", logoTagline:"v1.0 · a hand-drawn design system",
+      navFoundations:"Foundations", navPrinciples:"Principles", navColors:"Colors",
+      navTypography:"Typography", navSpacing:"Spacing", navRadius:"Border Radius",
+      navShadows:"Shadows", navComponents:"Components", navButtons:"Buttons",
+      navCards:"Cards", navBadges:"Badges", navInputs:"Inputs", navLists:"List Items",
+      navMotion:"Motion", navAnimations:"Animations", navPatterns:"Patterns",
+      navUsage:"Usage", navTokens:"CSS Tokens", navDoDont:"Do & Don't",
+      heroTitle:"Doodle<br>Design System",
+      heroSubtitle:"A playful, hand-drawn UI language built around warmth, imperfection, and the joy of a notebook sketch brought to life.",
+      heroBadge:"✏️ Version 1.0",
+      secPrinciples:"Principles", secPrinciplesDesc:"The four ideas that guide every design decision in this system.",
+      p1Title:"✏️ Imperfect by design", p1Desc:"Hand-drawn strokes, wobbly edges, and organic shapes are features, not bugs. Perfection is cold. Doodles are warm.",
+      p2Title:"💬 Conversational tone", p2Desc:"Copy sounds like a person, not a product. Lowercase preferred. Self-deprecating humor welcome. No corporate speak.",
+      p3Title:"🌟 Yellow as energy", p3Desc:"The single accent color carries all emphasis. It's the highlighter on the notebook page. Use it sparingly and deliberately.",
+      p4Title:"🌀 Motion with personality", p4Desc:"Animations are gentle and playful — a wobble, a wave, a float. Never snappy or corporate. The UI breathes.",
+      secColors:"Colors", secColorsDesc:"A deliberately minimal palette. One hero accent, neutral grays, and pure black-and-white structure.",
+      cYellow:"Yellow", cYellowL:"Yellow Light", cBlack:"Black", cWhite:"White", cG100:"Gray 100", cG200:"Gray 200", cG400:"Gray 400", cG600:"Gray 600",
+      secTypography:"Typography", secTypographyDesc:"Two Google Fonts in harmony: Caveat + Patrick Hand (LTR). Arabic: Reem Kufi Fun + Tajawal (RTL).",
+      tDisplay:"Display", tH1:"Heading 1", tH2:"Heading 2", tBody:"Body", tSmall:"Small", tLabel:"Nav Label",
+      tsDisplay:"hello world", tsH1:"sorry if i'm interrupting", tsH2:"recent posts",
+      tsBody:"thoughts i couldn't keep to myself", tsSmall:"April 18 · 4 min read", tsLabel:"Foundations",
+      tmDisplay:"700 · 2.4rem", tmH1:"700 · 1.9rem", tmH2:"600 · 1.4rem", tmBody:"400 · 1rem", tmSmall:"400 · 0.82rem", tmLabel:"700 · uppercase",
+      secSpacing:"Spacing", secSpacingDesc:"A base-4 scale. Consistent rhythm creates visual harmony throughout the layout.",
+      sp1:"micro gap", sp2:"tight gap", sp3:"default gap", sp4:"card padding", sp5:"layout padding", sp6:"section margin",
+      secRadius:"Border Radius", secRadiusDesc:"Soft, rounded corners everywhere. Sharp edges feel too cold for this system.",
+      secShadows:"Shadows", secShadowsDesc:"Flat offset shadows in pure black. No blurs. In RTL, the X-axis flips so the shadow always falls inward.",
+      shNone:"None", shNoneL:"no shadow", shSm:"Small", shDef:"Default", shLg:"Large",
+      secButtons:"Buttons", secButtonsDesc:"Pill-shaped with flat offset shadows. Hover lifts the button, active presses it down. Direction-aware in RTL.",
+      btnP:"✏️ primary", btnD:"default", btnG:"ghost", btnDis:"disabled",
+      secCards:"Cards", secCardsDesc:"The primary content container. Rounded, outlined, flat shadow. Yellow variant for featured content.",
+      cdTitle1:"portfolio", cdDesc1:"things i made (some proud of)", cdTitle2:"featured", cdDesc2:"yellow bg for highlights", cdTitle3:"ghost card", cdDesc3:"dashed, no shadow",
+      secBadges:"Badges", secBadgesDesc:"Pill-shaped labels for statuses, tags, and metadata. Always bordered.",
+      b1:"✏️ Version 1.0", b2:"open source", b3:"active", b4:"draft", b5:"published ✓", b6:"⚡ new",
+      secInputs:"Inputs", secInputsDesc:"Clean bordered inputs with offset shadow. Focus amplifies depth. Text aligns with reading direction.",
+      inPH:"type something here…", inFoc:"i'm focused", inDis:"disabled input",
+      secLists:"List Items", secListsDesc:"Used for blog posts, notifications, and feeds. The yellow dot is the visual anchor.",
+      li1t:"i tried to learn something new every week", li1m:"April 18 · 4 min read",
+      li2t:"this is the hover state", li2m:"April 9 · 2 min read",
+      secAnim:"Animations", secAnimDesc:"All animations are gentle, looping, and personality-driven. Never abrupt, never mechanical.",
+      anW:"wobble", anWs:"idle breathing", anWv:"wave", anWvs:"footer farewell", anF:"float", anFs:"speech bubbles", anP:"pop", anPs:"attention pulse",
+      secPat:"Background Patterns", secPatDesc:"The grid paper texture grounds the UI in a notebook metaphor. Applied as a fixed full-viewport layer.",
+      secTok:"CSS Tokens", secTokDesc:"Copy this into your :root. The RTL block auto-swaps fonts and shadow direction.",
+      secDD:"Do & Don't", secDDDesc:"Quick rules to keep the system coherent when extending it.",
+      doL:"✓ Do", dontL:"✗ Don't",
+      do1:"Use yellow sparingly — one accent per section max, to preserve its emphasis power.",
+      dn1:"Don't fill entire backgrounds with yellow. It dilutes the accent and feels chaotic.",
+      do2:"Write copy conversationally. Match the casual energy of the visual system.",
+      dn2:'Don\'t use formal, corporate language. "Click to proceed" — no. "let\'s go →" — yes.',
+      do3:"Apply the offset shadow to interactive elements. It signals depth and clickability.",
+      dn3:"Don't use blurred or opacity-based shadows. They conflict with the flat aesthetic.",
+      do4:"Keep animations slow and organic — 2–4s with ease-in-out timing.",
+      dn4:"Don't use fast animations under 200ms. They feel robotic, not doodle-like.",
+      secIcons:"Emoji Icons", secIconsDesc:"No icon library needed — emoji reinforce the handmade feel across both languages.",
+      ic1:"edit", ic2:"design", ic3:"contact", ic4:"archive", ic5:"featured",
+      ic6:"comment", ic7:"link", ic8:"about", ic9:"notes", ic10:"highlight", ic11:"add", ic12:"done",
+    },
+    ar: {
+      logoTitle:"دودل DS", logoTagline:"الإصدار 1.0 · نظام تصميم مرسوم باليد",
+      navFoundations:"الأساسيات", navPrinciples:"المبادئ", navColors:"الألوان",
+      navTypography:"الطباعة", navSpacing:"التباعد", navRadius:"تدوير الحواف",
+      navShadows:"الظلال", navComponents:"المكوّنات", navButtons:"الأزرار",
+      navCards:"البطاقات", navBadges:"الشارات", navInputs:"حقول الإدخال", navLists:"عناصر القائمة",
+      navMotion:"الحركة", navAnimations:"الرسوم المتحركة", navPatterns:"الأنماط",
+      navUsage:"الاستخدام", navTokens:"متغيرات CSS", navDoDont:"افعل ولا تفعل",
+      heroTitle:"نظام تصميم<br>دودل",
+      heroSubtitle:"لغة واجهة مرحة مرسومة باليد، مبنية على الدفء والتلقائية وبهجة رسومات الدفتر حين تنبض بالحياة.",
+      heroBadge:"✏️ الإصدار 1.0",
+      secPrinciples:"المبادئ", secPrinciplesDesc:"أربع أفكار تُوجّه كل قرار تصميمي في هذا النظام.",
+      p1Title:"✏️ ناقص بالتصميم", p1Desc:"الخطوط المرسومة باليد والحواف المتذبذبة والأشكال العضوية مميزاتٌ لا عيوب. الكمال بارد. الرسوم الحرة دافئة.",
+      p2Title:"💬 نبرة حوارية", p2Desc:"النصوص تبدو كإنسان لا كمنتج. الأسلوب غير الرسمي مُفضَّل. الفكاهة الخفيفة مرحب بها. لا لغة مؤسسية.",
+      p3Title:"🌟 الأصفر كطاقة", p3Desc:"لون التمييز الوحيد يحمل كل التأكيد. إنه الفلوماستر على صفحة الدفتر. استخدمه بتحفظ وعمد.",
+      p4Title:"🌀 حركة ذات شخصية", p4Desc:"الحركات لطيفة ومرحة — تأرجح، تلويح، طفو. لا شيء مفاجئ أو آلي. الواجهة تتنفس.",
+      secColors:"الألوان", secColorsDesc:"لوحة ألوان بسيطة عن قصد. لون بطولي واحد، رماديات محايدة، وهيكل أبيض وأسود صافٍ.",
+      cYellow:"أصفر", cYellowL:"أصفر فاتح", cBlack:"أسود", cWhite:"أبيض", cG100:"رمادي 100", cG200:"رمادي 200", cG400:"رمادي 400", cG600:"رمادي 600",
+      secTypography:"الطباعة", secTypographyDesc:"خطّان من Google Fonts يعملان معاً: Caveat + Patrick Hand للعربية. عربياً: ريم كوفي فن + تجوّل.",
+      tDisplay:"عرض", tH1:"عنوان رئيسي", tH2:"عنوان ثانوي", tBody:"نص أساسي", tSmall:"نص صغير", tLabel:"تسمية التنقل",
+      tsDisplay:"مرحباً بالعالم", tsH1:"آسف إن كنت أقاطعك", tsH2:"أحدث المقالات",
+      tsBody:"أفكار لم أستطع إبقاءها لنفسي", tsSmall:"١٨ أبريل · ٤ دقائق", tsLabel:"الأساسيات",
+      tmDisplay:"700 · 2.4rem", tmH1:"700 · 1.9rem", tmH2:"600 · 1.4rem", tmBody:"400 · 1rem", tmSmall:"400 · 0.82rem", tmLabel:"700 · كبير",
+      secSpacing:"التباعد", secSpacingDesc:"مقياس يعتمد على 4 وحدات. الإيقاع المتسق يُنشئ توافقاً بصرياً في جميع أنحاء التصميم.",
+      sp1:"فراغ دقيق", sp2:"فراغ ضيق", sp3:"فراغ افتراضي", sp4:"حشوة البطاقة", sp5:"حشوة التخطيط", sp6:"هامش القسم",
+      secRadius:"تدوير الحواف", secRadiusDesc:"حواف مستديرة ناعمة في كل مكان. الحواف الحادة تبدو باردة جداً لهذا النظام.",
+      secShadows:"الظلال", secShadowsDesc:"ظلال مُزاحة بالأسود الصافي. لا ضبابية. في RTL تنعكس الظلال لتبقى دائماً نحو الداخل.",
+      shNone:"بلا ظل", shNoneL:"بدون ظل", shSm:"صغير", shDef:"افتراضي", shLg:"كبير",
+      secButtons:"الأزرار", secButtonsDesc:"شكل كبسولة مع ظل مُزاح. التحويم يرفع الزر، النقر يضغطه. الاتجاه يتكيف مع RTL.",
+      btnP:"✏️ رئيسي", btnD:"افتراضي", btnG:"شفاف", btnDis:"معطَّل",
+      secCards:"البطاقات", secCardsDesc:"حاوية المحتوى الرئيسية. مستديرة، مُحاطة بإطار، ظل مسطح. النسخة الصفراء للمحتوى المميز.",
+      cdTitle1:"معرض الأعمال", cdDesc1:"أشياء صنعتها (بعضها أفتخر به)", cdTitle2:"مميز", cdDesc2:"خلفية صفراء للمحتوى المبرز", cdTitle3:"بطاقة شفافة", cdDesc3:"إطار متقطع، بلا ظل",
+      secBadges:"الشارات", secBadgesDesc:"تسميات بشكل كبسولة للحالات والوسوم والبيانات. دائماً مُحاطة بإطار.",
+      b1:"✏️ الإصدار 1.0", b2:"مفتوح المصدر", b3:"نشط", b4:"مسودة", b5:"منشور ✓", b6:"⚡ جديد",
+      secInputs:"حقول الإدخال", secInputsDesc:"حقول إدخال نظيفة بنفس الظل المُزاح. التركيز يُعمّق الظل. النص يتوافق مع اتجاه القراءة.",
+      inPH:"اكتب شيئاً هنا…", inFoc:"أنا مُركَّز", inDis:"حقل معطَّل",
+      secLists:"عناصر القائمة", secListsDesc:"تُستخدم للمدونات والإشعارات والتغذيات. النقطة الصفراء هي المرساة البصرية.",
+      li1t:"حاولت تعلم شيء جديد كل أسبوع", li1m:"١٨ أبريل · ٤ دقائق قراءة",
+      li2t:"هذه حالة التحويم", li2m:"٩ أبريل · دقيقتان قراءة",
+      secAnim:"الرسوم المتحركة", secAnimDesc:"جميع الحركات لطيفة ومتكررة وذات شخصية. لا شيء مفاجئ أو آلي.",
+      anW:"تأرجح", anWs:"تنفس خامل", anWv:"تلويح", anWvs:"وداع التذييل", anF:"طفو", anFs:"فقاعات الكلام", anP:"نبض", anPs:"لفت الانتباه",
+      secPat:"أنماط الخلفية", secPatDesc:"نسيج الورق المسطر يُرسّخ الواجهة في استعارة الدفتر. يُطبَّق كطبقة ثابتة تغطي كامل الشاشة.",
+      secTok:"متغيرات CSS", secTokDesc:"انسخها في :root الخاص بك. كتلة RTL تُبدّل الخطوط واتجاه الظلال تلقائياً.",
+      secDD:"افعل ولا تفعل", secDDDesc:"قواعد سريعة للحفاظ على تماسك النظام عند توسيعه.",
+      doL:"✓ افعل", dontL:"✗ لا تفعل",
+      do1:"استخدم الأصفر بتحفظ — تمييز واحد لكل قسم كحد أقصى للحفاظ على قوة التأكيد.",
+      dn1:"لا تملأ خلفيات كاملة بالأصفر. هذا يُضعف لون التمييز ويبدو فوضوياً.",
+      do2:"اكتب النصوص بأسلوب حواري. طابق الطاقة غير الرسمية للنظام البصري.",
+      dn2:"لا تستخدم لغة رسمية مؤسسية. «انقر للمتابعة» — لا. «هيا نبدأ ←» — نعم.",
+      do3:"طبّق الظل المُزاح على العناصر التفاعلية. فهو يدل على العمق وقابلية النقر.",
+      dn3:"لا تستخدم ظلالاً ضبابية أو قائمة على الشفافية. إنها تتعارض مع الجماليات المسطحة.",
+      do4:"أبقِ الحركات بطيئة وعضوية — مدة 2-4 ثوانٍ مع توقيت ease-in-out.",
+      dn4:"لا تستخدم حركات سريعة أقل من 200ms. إنها تبدو آلية، لا كرسومات حرة.",
+      secIcons:"الأيقونات التعبيرية", secIconsDesc:"لا حاجة لمكتبة أيقونات — الإيموجي يُعزز الطابع اليدوي في كلتا اللغتين.",
+      ic1:"تعديل", ic2:"تصميم", ic3:"تواصل", ic4:"أرشيف", ic5:"مميز",
+      ic6:"تعليق", ic7:"رابط", ic8:"عنّي", ic9:"ملاحظات", ic10:"إبراز", ic11:"إضافة", ic12:"تم",
+    }
+  };
+
+  function setLang(lang) {
+    const html = document.documentElement;
+    html.lang = lang;
+    html.dir  = lang === 'ar' ? 'rtl' : 'ltr';
+    document.title = lang === 'ar' ? 'نظام تصميم دودل' : 'Doodle Design System';
+
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+
+    const t = T[lang];
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const v = t[el.dataset.i18n];
+      if (v !== undefined) el.innerHTML = v;
+    });
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+      const v = t[el.dataset.i18nPh];
+      if (v !== undefined) el.placeholder = v;
+    });
+    document.querySelectorAll('[data-i18n-val]').forEach(el => {
+      const v = t[el.dataset.i18nVal];
+      if (v !== undefined) el.value = v;
+    });
+
+    try { localStorage.setItem('doodle-lang', lang); } catch(e) {}
+  }
+
+  // Restore saved preference
+  try {
+    const saved = localStorage.getItem('doodle-lang');
+    if (saved === 'ar') setLang('ar');
+  } catch(e) {}
+  </script>
+</body>
+</html>
